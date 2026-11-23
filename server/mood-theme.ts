@@ -2,11 +2,12 @@
 // middleware (vite.config.ts), so dev and production run the same code.
 //
 // Provider chain (first one available wins):
-//   1. Gemini            if GEMINI_API_KEY is set (model: GEMINI_MODEL, default gemini-3.5-flash-lite)
-//   2. Claude            if ANTHROPIC_API_KEY is set (optional, paid)
-//   3. Workers AI        on Cloudflare, through the AI binding (free daily allowance)
-//   4. Ollama            on your machine, if the Ollama app is running (free, local)
-//   5. Offline generator always available (no AI)
+//   1. OpenRouter        if OPEN_ROUTER_API_KEY is set (model: OPENROUTER_MODEL, default a free Ernie model)
+//   2. Gemini            if GEMINI_API_KEY is set (model: GEMINI_MODEL); THEME_PROVIDER=gemini puts it first
+//   3. Claude            if ANTHROPIC_API_KEY is set (optional, paid)
+//   4. Workers AI        on Cloudflare, through the AI binding (free daily allowance)
+//   5. Ollama            on your machine, if the Ollama app is running (free, local)
+//   6. Offline generator always available (no AI)
 // If a provider fails or returns an invalid config, the chain moves on, so the demo always answers.
 import { offlineTheme } from "../app/demos/mood-ui/offline";
 import { clampTheme, normaliseMood, type ShadcnTheme, themeSchema } from "../app/demos/mood-ui/schema";
@@ -14,6 +15,7 @@ import { themeUserMessage } from "./prompt";
 import { claudeTheme } from "./providers/claude";
 import { GEMINI_MODEL, geminiTheme } from "./providers/gemini";
 import { OLLAMA_MODEL, ollamaAvailable, ollamaTheme } from "./providers/ollama";
+import { OPENROUTER_MODEL, openRouterTheme } from "./providers/openrouter";
 import { ProviderError, type WorkersAI } from "./providers/types";
 import { WORKERS_AI_MODEL, workersAiTheme } from "./providers/workers-ai";
 import { createLimiter, visitorKey } from "./rate-limit";
@@ -22,6 +24,10 @@ export type ThemeEnv = {
   GEMINI_API_KEY?: string;
   GEMINI_MODEL?: string;
   ANTHROPIC_API_KEY?: string;
+  OPEN_ROUTER_API_KEY?: string;
+  OPENROUTER_MODEL?: string;
+  /** "gemini" tries Gemini before OpenRouter (OpenRouter is first by default). */
+  THEME_PROVIDER?: string;
   AI?: WorkersAI;
   /** Dev only: try a local Ollama server. */
   useOllama?: boolean;
@@ -34,18 +40,33 @@ export type ThemeEnv = {
 // One limiter per server instance: 6 AI requests per visitor per 10 minutes, 500 per day in total.
 const limit = createLimiter();
 
-export type ThemeSource = { id: "gemini" | "claude" | "workers-ai" | "ollama" | "offline"; label: string };
+export type ThemeSource = {
+  id: "gemini" | "openrouter" | "claude" | "workers-ai" | "ollama" | "offline";
+  label: string;
+};
 export type ThemeResponse = ShadcnTheme & { source: ThemeSource };
 
 type Attempt = { source: ThemeSource; run: () => Promise<unknown> };
 
 function attempts(user: string, env: ThemeEnv): Attempt[] {
   const list: Attempt[] = [];
+  // OpenRouter first by default, Gemini as the alternative (THEME_PROVIDER=gemini swaps them).
+  const first: Attempt[] = [];
+  if (env.OPEN_ROUTER_API_KEY) {
+    const key = env.OPEN_ROUTER_API_KEY;
+    const model = env.OPENROUTER_MODEL || OPENROUTER_MODEL;
+    first.push({
+      source: { id: "openrouter", label: `${model} via OpenRouter` },
+      run: () => openRouterTheme(user, key, model),
+    });
+  }
   if (env.GEMINI_API_KEY) {
     const key = env.GEMINI_API_KEY;
     const model = env.GEMINI_MODEL || GEMINI_MODEL;
-    list.push({ source: { id: "gemini", label: model }, run: () => geminiTheme(user, key, model) });
+    first.push({ source: { id: "gemini", label: model }, run: () => geminiTheme(user, key, model) });
   }
+  if (env.THEME_PROVIDER === "gemini") first.reverse();
+  list.push(...first);
   if (env.ANTHROPIC_API_KEY) {
     const key = env.ANTHROPIC_API_KEY;
     list.push({ source: { id: "claude", label: "Claude Opus 5.5" }, run: () => claudeTheme(user, key) });

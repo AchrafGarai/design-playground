@@ -103,10 +103,11 @@ Checked in both themes by `tests/unit/contrast.test.ts` from `contrast-pairs.ts`
   vary them, because a model will copy an example whose brief is close to the one it gets.
 - **The guard** (`guard.ts`) then fixes any pair below AA: card text 7:1, meta text 4.5:1, every foreground on its fill
   4.5:1, primary vs card 3:1. A unit test also checks that the guide's own examples are valid and AA-clean.
-- **Providers** (`server/mood-theme.ts`, first available wins): Gemini if `GEMINI_API_KEY` is set (`GEMINI_MODEL`,
-  default `gemini-3.5-flash-lite`, REST + JSON schema output) → Claude Opus 5.5 if a key is set → Workers AI on
-  Cloudflare (free allowance) → Ollama on this Mac (`qwen2.5:7b`, free) → offline generator (picks a guide palette from
-  the brief's words). Only colours are strict when parsing; anything else falls back to a default.
+- **Providers** (`server/mood-theme.ts`, first available wins): OpenRouter if `OPEN_ROUTER_API_KEY` is set
+  (`OPENROUTER_MODEL`, default the free `baidu/ernie-5.5-flash-preview:free`, preferred after a local comparison)
+  → Gemini if `GEMINI_API_KEY` is set (`GEMINI_MODEL`, default `gemini-3.5-flash-lite`; `THEME_PROVIDER=gemini`
+  puts it first) → Claude Opus 5.5 if a key is set → Workers AI on Cloudflare (free allowance) → Ollama on this Mac
+  (`qwen2.5:7b`, free) → offline generator. Only colours are strict when parsing; anything else falls back.
 - **Fine-tuning (later):** a LoRA on Qwen with MLX, imported into Ollama, would need a few hundred good examples.
   Collecting themes you like is the way to build that dataset; the guide + examples + guard cover most of the gain first.
 - Abuse limits: POST only, same-origin only, input validated, the brief passed as data, never as instructions.
