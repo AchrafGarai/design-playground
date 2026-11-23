@@ -40,21 +40,20 @@ jobs:
       # typecheck + lint + unit tests + build (produces build/client)
       - run: pnpm check
 
+      # wrangler runs through npx: the wrangler-action installs it with pnpm, whose build-script policy blocks it.
       # First deploy only: create the Pages project (fails harmlessly once it exists).
       - name: Create Cloudflare Pages project
         continue-on-error: true
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages project create playground --production-branch=main
+        run: npx --yes wrangler@4 pages project create playground --production-branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy build/client --project-name=playground
+        run: npx --yes wrangler@4 pages deploy build/client --project-name=playground --branch=main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 # Mood → UI: functions/api/theme.ts uses Cloudflare Workers AI (free allowance) through the "AI" binding declared in
 # wrangler.toml; `wrangler pages deploy` uploads functions/ alongside build/client. Optional: add ANTHROPIC_API_KEY as a
 # secret in the Pages project to use Claude first, or GEMINI_API_KEY (and optionally GEMINI_MODEL) to use Gemini first.
