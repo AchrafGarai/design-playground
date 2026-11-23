@@ -1,0 +1,25 @@
+# Cloudflare Pages headers. Docs: https://developers.cloudflare.com/pages/configuration/headers/
+#
+# CSP notes (permissive-but-safe):
+# - script-src 'unsafe-inline': React Router's prerendered pages hydrate from small inline scripts,
+#   and root.tsx has one pre-paint script for ?view=full. No third-party scripts are allowed.
+# - 'wasm-unsafe-eval': lets demos instantiate WebAssembly. It does NOT allow eval().
+# - style-src 'unsafe-inline': Motion and demos set inline styles / CSS variables.
+# - img/media blob: data: for generated previews, canvases and audio buffers.
+# - worker-src blob: for demos that spawn workers from bundles.
+# - connect-src 'self': add AI/model hosts here explicitly when a demo needs them.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Future: a demo that needs Wasm threads (SharedArrayBuffer) must be cross-origin isolated.
+# Uncomment and replace <slug> (and serve that demo with mode: "iframe" so the shell is unaffected):
+# /p/<slug>/*
+#   Cross-Origin-Opener-Policy: same-origin
+#   Cross-Origin-Embedder-Policy: require-corp

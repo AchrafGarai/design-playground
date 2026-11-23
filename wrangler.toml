@@ -1,0 +1,9 @@
+# Cloudflare Pages project config (used by `wrangler pages deploy` and `wrangler pages dev`).
+name = "playground"
+pages_build_output_dir = "build/client"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Workers AI (free daily allowance): powers Mood → UI on the deployed site. No API key needed.
+[ai]
+binding = "AI"

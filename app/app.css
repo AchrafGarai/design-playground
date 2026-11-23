@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@import "./design-system/tokens.css";
+@import "./design-system/portfolio.css";
+
+/* ── Playground-only additions ─────────────────────────────────── */
+
+/* Full-screen view (?view=full): hide all shell chrome. Set before hydration by an inline script in root.tsx. */
+html[data-view="full"] [data-chrome] {
+  display: none !important;
+}
+
+/* Demo roots: an isolated stacking/style context. Demos style [data-demo="<slug>"] only. */
+.demo-root {
+  isolation: isolate;
+  min-height: 100%;
+}

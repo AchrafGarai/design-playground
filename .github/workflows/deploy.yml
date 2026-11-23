@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # Later: Rust → Wasm crates (crates/). Enable when the first crate lands.
+      # - name: Install Rust + wasm-pack
+      #   run: |
+      #     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --target wasm32-unknown-unknown
+      #     echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+      #     curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      # - name: Build crates
+      #   run: for c in crates/*/; do wasm-pack build "$c" --target web --release; done
+
+      - run: pnpm install --frozen-lockfile
+
+      # typecheck + lint + unit tests + build (produces build/client)
+      - run: pnpm check
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy build/client --project-name=playground
+# Mood → UI: functions/api/theme.ts uses Cloudflare Workers AI (free allowance) through the "AI" binding declared in
+# wrangler.toml; `wrangler pages deploy` uploads functions/ alongside build/client. Optional: add ANTHROPIC_API_KEY as a
+# secret in the Pages project to use Claude first, or GEMINI_API_KEY (and optionally GEMINI_MODEL) to use Gemini first.

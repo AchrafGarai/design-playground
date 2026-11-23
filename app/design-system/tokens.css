@@ -1,0 +1,116 @@
+/*
+ * Design tokens, copied from the UX portfolio (~/Desktop/ux-portfolio/src/styles/global.css).
+ * Apple-like system type, neutral greys, one blue accent. Light on :root, dark on html.dark.
+ * The ONLY place raw colours live (tested). Contrast rules: docs/design-decisions.md.
+ */
+:root {
+  /* palette: light */
+  --bg: #fff;
+  --bg-100: #f6f6f6;
+  --bg-200: #f2f2f2;
+  --bg-300: #e5e5e5;
+  --fg: #4a4a4c; /* body text, slightly muted under black headings */
+  --contrast: #000; /* headings, active */
+  --secondary: #707070; /* meta text: on bg and bg-100 only (4.4:1 on bg-200) */
+  --mute: #bdbdbd; /* disabled, hairline icons. Never text */
+  --line: rgb(125 125 125 / 12%);
+  --line-strong: rgb(125 125 125 / 20%);
+  --accent: #1a6fe8; /* orb blue: links and focus, on bg only (4.3:1 on bg-100) */
+  --media-card: #f6f6f6; /* card behind demo stages */
+
+  /* motion */
+  --ease-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.4, 0, 0.2, 1.8); /* gentle overshoot */
+  --ease-snap: cubic-bezier(0.4, 0, 0.2, 2.4); /* springy lift */
+
+  /* layout */
+  --container: 700px;
+  --container-wide: 900px;
+  --gutter: 24px;
+  --radius-media: clamp(20px, 18.1px + 0.53vw, 26px);
+  --radius-stage: 12px; /* the demo stage: a quiet canvas frame, softer than media cards */
+  --sidebar-width: 220px; /* compact, macOS-style */
+
+  /* One soft elevation for everything that floats (toolbar pills, popover, drawer): barely there, tight blur. */
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.04), 0 2px 6px -2px rgb(0 0 0 / 0.05);
+  --header-height: 48px;
+  --main-offset: 0px; /* sidebar width once it is visible (md+), to centre the floating nav on the main column */
+}
+
+@media (min-width: 768px) {
+  :root {
+    --main-offset: var(--sidebar-width);
+  }
+}
+
+.dark {
+  --bg: #18181a;
+  --bg-100: hsl(240 2% 16%);
+  --bg-200: hsl(240 2% 19%);
+  --bg-300: hsl(240 2% 22%);
+  /* Softened from the portfolio (#b8b8ba / #fff / #a5a5a5): less glare on the dark background. */
+  --fg: #a6a6a9;
+  --contrast: #e4e4e6;
+  --secondary: #939396;
+  --mute: #808080;
+  --line: rgb(125 125 125 / 40%);
+  --line-strong: rgb(125 125 125 / 60%);
+  --accent: #6cb6ff; /* light orb blue, 8:1 on the dark background */
+  --media-card: #1c1c1f; /* barely lifted from the page */
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.2), 0 2px 6px -2px rgb(0 0 0 / 0.25); /* dark needs a touch more to read */
+}
+
+@theme inline {
+  --font-sans:
+    system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-heading: var(--font-sans);
+
+  --color-bg: var(--bg);
+  --color-bg-100: var(--bg-100);
+  --color-bg-200: var(--bg-200);
+  --color-bg-300: var(--bg-300);
+  --color-fg: var(--fg);
+  --color-contrast: var(--contrast);
+  --color-secondary-text: var(--secondary);
+  --color-mute: var(--mute);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-brand: var(--accent);
+  --color-media-card: var(--media-card);
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-row: 14px;
+  --radius-media: var(--radius-media);
+  --radius-stage: var(--radius-stage);
+
+  --text-3xs: 0.6875rem; /* 11: sidebar meta */
+  --text-3xs--line-height: 1.4;
+  --text-2xs: 0.75rem; /* 12 */
+  --text-2xs--line-height: 1.4;
+  --text-xs: 0.8125rem; /* 13 */
+  --text-xs--line-height: 1.4;
+  --text-sm: 0.875rem; /* 14 */
+  --text-sm--line-height: 1.5;
+  --text-btn: 0.9375rem; /* 15 */
+  --text-btn--line-height: 1.5;
+  --text-base: 1rem; /* 16 */
+  --text-base--line-height: 1.5;
+  --text-lg: 1.125rem; /* 18 */
+  --text-lg--line-height: 1.4;
+  --text-xl: 1.25rem; /* 20 */
+  --text-xl--line-height: 1.4;
+
+  --font-weight-semibold: 550;
+  --font-weight-bold: 650;
+
+  --spacing-sidebar: var(--sidebar-width);
+  --spacing-header: var(--header-height);
+
+  --ease-spring: var(--ease-spring);
+  --ease-snap: var(--ease-snap);
+}

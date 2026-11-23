@@ -1,0 +1,550 @@
+/*
+ * Scoped to this demo's container only: never the page root or body.
+ * The default shadcn theme maps to the playground's own tokens (light and dark). A generated theme overrides these
+ * variables inline on .shadcn-theme, and every stock shadcn component on the canvas picks them up.
+ */
+/* shadcn's --secondary shadows the playground's --secondary (meta grey), so keep a handle on the grey first. */
+[data-demo="mood-ui"] {
+  --m-meta: var(--secondary);
+}
+
+[data-demo="mood-ui"] .m-root {
+  container: mood / inline-size;
+}
+
+[data-demo="mood-ui"] .shadcn-theme {
+  --background: var(--bg);
+  --foreground: var(--contrast);
+  --card: var(--bg);
+  --card-foreground: var(--contrast);
+  --primary: var(--contrast);
+  --primary-foreground: var(--bg);
+  --secondary: var(--bg-200);
+  --secondary-foreground: var(--contrast);
+  --muted: var(--bg-100);
+  --muted-foreground: var(--m-meta);
+  --accent: var(--bg-200);
+  --accent-foreground: var(--contrast);
+  --border: var(--line-strong);
+  --ring: var(--accent);
+  --radius: 0.75rem;
+  --font-heading: var(--font-sans);
+  --font-body: var(--font-sans);
+
+  /* The canvas floor is a neutral grey from the playground (not the generated theme), like a design tool's
+     canvas: the stage's own soft grey (light and dark), so dark and light themes both stand out on it
+     and the toolbar fade above always melts into the same floor. */
+  background-color: var(--bg-100);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  transition:
+    background-color 600ms ease,
+    color 600ms ease;
+}
+
+[data-demo="mood-ui"] .shadcn-theme[data-mode="dark"] {
+  color-scheme: dark;
+}
+
+[data-demo="mood-ui"] .shadcn-theme [data-slot="card-title"] {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight, 600);
+  text-transform: var(--font-heading-case, none);
+  letter-spacing: var(--font-heading-tracking, normal);
+  text-shadow: var(--font-heading-glow, none);
+}
+[data-demo="mood-ui"] .shadcn-theme .m-canvas {
+  font-weight: var(--font-body-weight, 400);
+}
+
+/* Grid/flex children of card content may shrink (long emails truncate instead of pushing buttons out of the card). */
+[data-demo="mood-ui"] [data-slot="card-content"] > * {
+  min-width: 0;
+}
+
+/* Colours and radius glide to the new config. */
+[data-demo="mood-ui"] .shadcn-theme .m-canvas :is(*, *::before, *::after) {
+  transition-property: background-color, color, border-color, border-radius, fill, stroke, opacity, box-shadow;
+  transition-duration: 450ms;
+  transition-timing-function: ease;
+}
+
+/* ── Character: shape, border, texture, button text ───────────────────
+ * Driven by data attributes on .shadcn-theme (data-shape, data-border, data-texture, data-button-text), so the
+ * components stay stock shadcn. Shapes use CSS corner-shape (Chromium); other browsers fall back to rounded corners.
+ */
+[data-demo="mood-ui"] .shadcn-theme {
+  --m-ctrl-r: calc(var(--radius) - 2px);
+  --m-edge: var(--border);
+}
+
+/* Shapes */
+[data-demo="mood-ui"]
+  [data-shape="pill"]
+  :is(
+    [data-slot="button"],
+    [data-slot="badge"],
+    [data-slot="input"],
+    [data-slot="tabs-list"],
+    [data-slot="tabs-trigger"]
+  ) {
+  border-radius: 999px;
+}
+[data-demo="mood-ui"]
+  [data-shape="sharp"]
+  :is(
+    [data-slot="button"],
+    [data-slot="badge"],
+    [data-slot="input"],
+    [data-slot="textarea"],
+    [data-slot="tabs-list"],
+    [data-slot="tabs-trigger"],
+    [data-slot="card"]
+  ) {
+  border-radius: 0;
+}
+[data-demo="mood-ui"]
+  [data-shape="squircle"]
+  :is(
+    [data-slot="button"],
+    [data-slot="input"],
+    [data-slot="textarea"],
+    [data-slot="tabs-list"],
+    [data-slot="tabs-trigger"]
+  ) {
+  border-radius: max(10px, calc(var(--radius) * 1.5));
+  corner-shape: squircle;
+}
+[data-demo="mood-ui"] [data-shape="squircle"] [data-slot="card"] {
+  border-radius: max(22px, calc(var(--radius) * 2.5));
+  corner-shape: squircle;
+}
+[data-demo="mood-ui"]
+  :is([data-shape="bevel"], [data-shape="gem"])
+  :is(
+    [data-slot="input"],
+    [data-slot="textarea"],
+    [data-slot="tabs-list"],
+    [data-slot="tabs-trigger"],
+    [data-slot="badge"]
+  ),
+[data-demo="mood-ui"] [data-shape="bevel"] [data-slot="button"] {
+  border-radius: 7px;
+  corner-shape: bevel;
+}
+[data-demo="mood-ui"] :is([data-shape="bevel"], [data-shape="gem"]) [data-slot="card"] {
+  border-radius: 16px;
+  corner-shape: bevel;
+}
+[data-demo="mood-ui"]
+  [data-shape="notch"]
+  :is([data-slot="button"], [data-slot="input"], [data-slot="textarea"], [data-slot="tabs-list"], [data-slot="badge"]) {
+  border-radius: 6px;
+  corner-shape: notch;
+}
+[data-demo="mood-ui"] [data-shape="notch"] [data-slot="card"] {
+  border-radius: 14px;
+  corner-shape: notch;
+}
+[data-demo="mood-ui"]
+  [data-shape="scoop"]
+  :is([data-slot="button"], [data-slot="input"], [data-slot="textarea"], [data-slot="badge"]) {
+  border-radius: 8px;
+  corner-shape: scoop;
+}
+[data-demo="mood-ui"] [data-shape="scoop"] [data-slot="card"] {
+  border-radius: 18px;
+  corner-shape: scoop;
+}
+/* Gem: a pointed hexagon (bevelled corners that meet at mid-height) with small diamonds at the tips. */
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"] {
+  position: relative;
+  border-radius: 0.9em / 50%;
+  corner-shape: bevel;
+  padding-inline: 1.5em;
+}
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"][data-size="sm"] {
+  padding-inline: 1.1em;
+}
+/* The tip diamonds stick out 4px on each side: keep that room inside the layout so they never overflow a card. */
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"]:not([class*="p-0"], [data-variant="ghost"]) {
+  margin-inline: 5px;
+}
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"][class*="w-full"]:not([data-variant="ghost"]) {
+  width: calc(100% - 10px);
+}
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"]:not([class*="p-0"], [data-variant="ghost"])::before,
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"]:not([class*="p-0"], [data-variant="ghost"])::after {
+  content: "";
+  position: absolute;
+  top: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  rotate: 45deg;
+  border: 1.5px solid var(--m-edge);
+  background: var(--card);
+}
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"]::before {
+  left: -4px;
+}
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"]::after {
+  right: -4px;
+}
+[data-demo="mood-ui"] [data-shape="gem"] [data-slot="button"][class*="p-0"] {
+  padding-inline: 0;
+  border-radius: 30%;
+  corner-shape: bevel;
+}
+
+/* Depth "lifted": barely-there elevation on buttons. A faint top sheen, a 1px light inner edge, a ring a touch
+   lighter than the fill and a soft shadow tinted with the button's own colour. Border styles below win if they set
+   their own shadow. */
+[data-demo="mood-ui"] [data-depth="lifted"] [data-slot="button"][data-variant="default"] {
+  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0) 55%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.16),
+    inset 0 0 0 1px color-mix(in oklab, var(--primary), white 12%),
+    0 1px 2px rgb(0 0 0 / 0.14),
+    0 6px 16px -8px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+[data-demo="mood-ui"]
+  [data-depth="lifted"]
+  [data-slot="button"]:is([data-variant="secondary"], [data-variant="outline"]) {
+  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.05), rgb(255 255 255 / 0) 55%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.07),
+    0 1px 2px rgb(0 0 0 / 0.08);
+}
+/* With a texture too: keep both layers. */
+[data-demo="mood-ui"]
+  .shadcn-theme[data-depth="lifted"]:not([data-texture="none"])
+  [data-slot="button"][data-variant="default"] {
+  background-image: linear-gradient(to bottom, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0) 55%), var(--m-tex);
+}
+
+/* Borders */
+[data-demo="mood-ui"]
+  [data-border="none"]
+  :is([data-slot="card"], [data-slot="input"], [data-slot="textarea"], [data-slot="button"][data-variant="outline"]) {
+  border-color: transparent;
+}
+[data-demo="mood-ui"] [data-border="none"] [data-slot="card"] {
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 8px 24px -8px rgb(0 0 0 / 0.12);
+}
+[data-demo="mood-ui"] [data-border="none"] :is([data-slot="input"], [data-slot="textarea"]) {
+  background: var(--muted);
+}
+[data-demo="mood-ui"]
+  [data-border="strong"]
+  :is([data-slot="card"], [data-slot="input"], [data-slot="textarea"], [data-slot="button"], [data-slot="badge"]) {
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--m-edge);
+}
+[data-demo="mood-ui"] [data-border="strong"] [data-slot="card"] {
+  box-shadow: 4px 4px 0 var(--m-edge);
+}
+[data-demo="mood-ui"] [data-border="double"] [data-slot="card"] {
+  border: 4px double var(--m-edge);
+}
+[data-demo="mood-ui"] [data-border="double"] :is([data-slot="input"], [data-slot="textarea"]) {
+  border-color: color-mix(in oklab, var(--m-edge) 70%, var(--card));
+}
+[data-demo="mood-ui"] [data-border="double"] [data-slot="button"]:not([data-variant="ghost"]) {
+  border: 3px double var(--m-edge);
+}
+[data-demo="mood-ui"] [data-border="double"] [data-slot="button"][data-variant="default"] {
+  border-color: color-mix(in oklab, var(--primary), var(--primary-foreground) 45%);
+}
+[data-demo="mood-ui"] [data-border="double"] [data-slot="separator"] {
+  height: 3px;
+  background: transparent;
+  border-block: 1px solid var(--m-edge);
+}
+[data-demo="mood-ui"] [data-border="raised"] :is([data-slot="card"], [data-slot="button"]:not([data-variant="ghost"])) {
+  border-color: color-mix(in oklab, var(--m-edge), black 25%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    inset 0 -2px 0 rgb(0 0 0 / 0.28),
+    0 2px 0 rgb(0 0 0 / 0.25);
+}
+[data-demo="mood-ui"] [data-border="raised"] :is([data-slot="input"], [data-slot="textarea"]) {
+  box-shadow: inset 0 2px 3px rgb(0 0 0 / 0.22);
+}
+[data-demo="mood-ui"] [data-border="raised"] [data-slot="button"]:not([data-variant="ghost"]):active {
+  translate: 0 1px;
+  box-shadow: inset 0 2px 3px rgb(0 0 0 / 0.3);
+}
+[data-demo="mood-ui"] [data-border="glow"] :is([data-slot="card"], [data-slot="input"], [data-slot="textarea"]) {
+  border-color: color-mix(in oklab, var(--primary) 55%, var(--border));
+}
+[data-demo="mood-ui"] [data-border="glow"] [data-slot="card"] {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 18%, transparent),
+    0 0 28px -8px color-mix(in oklab, var(--primary) 55%, transparent);
+}
+[data-demo="mood-ui"] [data-border="glow"] [data-slot="button"][data-variant="default"] {
+  box-shadow: 0 0 18px -2px color-mix(in oklab, var(--primary) 70%, transparent);
+}
+[data-demo="mood-ui"] [data-border="glow"] [data-slot="button"][data-variant="outline"] {
+  border-color: var(--primary);
+}
+
+/* Textures: on cards and main buttons, blended into their fill so contrast barely moves. */
+[data-demo="mood-ui"] [data-texture="grain"] {
+  --m-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 .28'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --m-tex-size: 160px;
+}
+[data-demo="mood-ui"] [data-texture="paper"] {
+  --m-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.035 .6' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 .26'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --m-tex-size: 240px;
+}
+[data-demo="mood-ui"] [data-texture="stone"] {
+  --m-tex: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.018' numOctaves='5' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 .45'/%3E%3C/filter%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 .18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --m-tex-size: 300px;
+}
+[data-demo="mood-ui"] [data-texture="scanlines"] {
+  --m-tex: repeating-linear-gradient(to bottom, rgb(0 0 0 / 0.16) 0 1px, transparent 1px 3px);
+  --m-tex-size: auto;
+}
+[data-demo="mood-ui"] [data-texture="grid"] {
+  --m-tex:
+    linear-gradient(to right, color-mix(in oklab, currentColor 6%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, currentColor 6%, transparent) 1px, transparent 1px);
+  --m-tex-size: 16px 16px;
+}
+[data-demo="mood-ui"] [data-texture="halftone"] {
+  --m-tex: radial-gradient(circle, color-mix(in oklab, currentColor 9%, transparent) 1px, transparent 1.6px);
+  --m-tex-size: 7px 7px;
+}
+[data-demo="mood-ui"]
+  .shadcn-theme:not([data-texture="none"])
+  :is([data-slot="card"], [data-slot="button"][data-variant="default"]) {
+  background-image: var(--m-tex);
+  background-size: var(--m-tex-size);
+  background-blend-mode: soft-light;
+}
+[data-demo="mood-ui"]
+  .shadcn-theme:is([data-texture="grid"], [data-texture="halftone"], [data-texture="scanlines"])
+  :is([data-slot="card"], [data-slot="button"][data-variant="default"]) {
+  background-blend-mode: normal;
+}
+
+/* Button text */
+[data-demo="mood-ui"] [data-button-text="caps"] [data-slot="button"] {
+  font-family: var(--font-heading);
+  font-weight: var(--font-heading-weight, 600);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8em;
+}
+[data-demo="mood-ui"] [data-button-text="caps"] [data-slot="button"][data-size="sm"] {
+  letter-spacing: 0.08em;
+  font-size: 0.72em;
+}
+
+/* ── Canvas ─────────────────────────────────────────────────────── */
+[data-demo="mood-ui"] .m-canvas {
+  cursor: grab;
+  touch-action: none;
+  background-image: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--fg) calc(var(--m-dot, 1) * 12%), transparent) 0.8px,
+    transparent 1px
+  );
+  background-size: 24px 24px;
+}
+[data-demo="mood-ui"] .m-canvas[data-panning],
+[data-demo="mood-ui"] .m-canvas[data-space] {
+  cursor: grabbing;
+}
+[data-demo="mood-ui"] .m-canvas[data-panning] * {
+  user-select: none;
+}
+[data-demo="mood-ui"] .m-canvas [data-slot="card"] {
+  cursor: default;
+}
+
+/* Each new config replays the entrance, rippling across the columns. */
+[data-demo="mood-ui"] .m-item {
+  animation: m-in 650ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+@keyframes m-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+    filter: blur(4px);
+  }
+}
+
+/* While the model thinks, the canvas breathes. */
+[data-demo="mood-ui"] .shadcn-theme[data-busy] .m-item {
+  animation: m-breathe 1.8s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 90ms);
+}
+@keyframes m-breathe {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* Zoom pill (always dark, like the prompt bar). */
+[data-demo="mood-ui"] .m-zoom {
+  background: rgb(28 28 31 / 0.82);
+  color: #e8e8ea;
+  backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 8px 24px rgb(0 0 0 / 0.18);
+}
+[data-demo="mood-ui"] .m-zoom-btn {
+  display: grid;
+  place-items: center;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 999px;
+  transition: background-color 150ms;
+}
+[data-demo="mood-ui"] .m-zoom-btn:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+/* Only when there is room beside the prompt bar (the stage width, not the window's). */
+@container mood (max-width: 860px) {
+  [data-demo="mood-ui"] .m-zoom {
+    display: none;
+  }
+}
+
+/* ── Prompt bar ─────────────────────────────────────────────────── */
+[data-demo="mood-ui"] .m-glass {
+  background: rgb(30 30 33 / 0.78);
+  backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.08),
+    0 10px 30px -8px rgb(0 0 0 / 0.35);
+}
+[data-demo="mood-ui"] .m-chip:hover {
+  background: rgb(44 44 48 / 0.9);
+}
+[data-demo="mood-ui"] .m-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  transition: background-color 150ms;
+}
+[data-demo="mood-ui"] .m-pill-btn:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+
+@property --m-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+[data-demo="mood-ui"] .m-prompt {
+  background: rgb(24 24 27 / 0.86);
+  backdrop-filter: blur(24px) saturate(1.6);
+  box-shadow:
+    0 0 0 1px rgb(255 255 255 / 0.09),
+    0 1px 0 rgb(255 255 255 / 0.06) inset,
+    0 24px 60px -12px rgb(0 0 0 / 0.5),
+    0 8px 20px -8px rgb(0 0 0 / 0.3);
+}
+/* A light ring that travels around the bar: faint when focused, bright while the model is thinking. */
+[data-demo="mood-ui"] .m-prompt::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--m-angle),
+    transparent 0deg,
+    #7cc4ff 60deg,
+    #2f8bff 120deg,
+    transparent 180deg,
+    transparent 360deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  animation: m-spin 3.2s linear infinite;
+  pointer-events: none;
+}
+[data-demo="mood-ui"] .m-prompt[data-focused]::before {
+  opacity: 0.55;
+}
+[data-demo="mood-ui"] .m-prompt[data-busy]::before {
+  opacity: 1;
+  animation-duration: 1.1s;
+}
+/* A soft glow under the bar while it thinks. */
+[data-demo="mood-ui"] .m-prompt::after {
+  content: "";
+  position: absolute;
+  inset: 20% 10% -30%;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(closest-side, rgb(47 139 255 / 0.45), transparent);
+  filter: blur(18px);
+  opacity: 0;
+  transition: opacity 500ms ease;
+  pointer-events: none;
+}
+[data-demo="mood-ui"] .m-prompt[data-busy]::after {
+  opacity: 1;
+}
+@keyframes m-spin {
+  to {
+    --m-angle: 360deg;
+  }
+}
+
+[data-demo="mood-ui"] .m-orb-busy .swirl {
+  animation-duration: 1.6s;
+}
+
+[data-demo="mood-ui"] .m-send {
+  background: rgb(255 255 255 / 0.1);
+  color: rgb(255 255 255 / 0.4);
+  transition:
+    background-color 250ms ease,
+    color 250ms ease,
+    box-shadow 250ms ease;
+}
+[data-demo="mood-ui"] .m-send[data-ready] {
+  background: #f5f5f7;
+  color: #111113;
+  box-shadow: 0 4px 14px -4px rgb(124 196 255 / 0.6);
+}
+[data-demo="mood-ui"] .m-spinner {
+  border: 2px solid rgb(17 17 19 / 0.2);
+  border-top-color: #111113;
+  animation: m-rotate 700ms linear infinite;
+}
+[data-demo="mood-ui"] .m-prompt[data-busy] .m-send {
+  background: #f5f5f7;
+}
+@keyframes m-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-demo="mood-ui"] .shadcn-theme,
+  [data-demo="mood-ui"] .shadcn-theme *,
+  [data-demo="mood-ui"] .m-prompt::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
