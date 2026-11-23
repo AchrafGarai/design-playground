@@ -96,7 +96,7 @@ Checked in both themes by `tests/unit/contrast.test.ts` from `contrast-pairs.ts`
   Chromium only; elsewhere they fall back to rounded corners). The guide keeps ordinary briefs plain; textures and
   ornate shapes are for games, fantasy, sci-fi and retro. The config is swapped in as CSS variables on the card's wrapper, and the card re-renders.
   The default (unthemed) config maps to the playground's own tokens, in light and dark.
-- **One input, no presets.** 1–5 words (letters, numbers and symbols, no markup); a few suggestion chips fill the field.
+- **One input, no presets.** Up to 40 words (letters, numbers and symbols, no markup); longer briefs get more specific themes. Every request carries a random creative direction (light/dark, temperature, material, era, energy) so the same brief varies, while a signature brand colour still wins; a few suggestion chips fill the field.
 - **The design guide teaches the model** (`app/demos/mood-ui/design-guide.ts`, meant to be edited by hand): DO and AVOID
   rules, the only fonts allowed (the mood → font map: 44 free fonts; body text only from six safe faces, Geist, Inter, IBM Plex Sans, IBM Plex Serif, EB Garamond and Libre Caslon Text, so experiments stay in headings; recommended heading/body pairs per mood, and per-font type settings such as uppercase, tracking and neon glow; self-hosted, loaded on demand), 10 curated starting palettes, and worked
   examples. All of it is sent with every request to every provider. Examples are the strongest lever for small models;

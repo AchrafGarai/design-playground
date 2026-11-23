@@ -24,7 +24,7 @@ async function call(user: string, apiKey: string, model: string, structured: boo
     signal: AbortSignal.timeout(60_000),
     body: JSON.stringify({
       model,
-      temperature: 0.7,
+      temperature: 1,
       messages: [
         { role: "system", content: THEME_SYSTEM },
         { role: "user", content: user },

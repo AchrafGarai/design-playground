@@ -19,9 +19,12 @@ export const DO = [
   "mutedForeground is for meta text: clearly softer than cardForeground, but still easy to read.",
   "border is subtle: one small step from the card, never a strong line.",
   "Match radius to the mood: 0–0.375rem crisp and serious, 0.5–0.75rem friendly default, 1rem+ soft and playful.",
-  "Pair two fonts: start from the FONT PAIRS for the closest mood. With no strong mood, use geist for both. Same font for both is fine for minimal brands.",
+  "Pair two fonts: the FONT PAIRS are ideas, not answers; any heading font that fits the brief is welcome. With no strong mood, geist for both is fine.",
   "Do not get carried away by the first association (fashion does not always mean the same serif): use the style leanings as a compass, then make your own choices.",
-  "Give out-of-the-ordinary briefs (games, fantasy, sci-fi, retro, luxury) real character: pick a shape, a border style and, when it is a game or a tactile world, a texture. A fantasy game menu might be gem + double + stone + caps; a cyberpunk HUD notch + glow + scanlines.",
+  "Give out-of-the-ordinary briefs (games, fantasy, sci-fi, retro, luxury) real character with shape, border and, for games or tactile worlds, texture. Vary the combination: there are many fantasy worlds (frozen, elven, desert, necromantic, pastoral, celestial) and many luxury houses (stark monochrome, cream couture, jewel-toned, sun-bleached).",
+  "Every brief has many good answers. Treat palettes, font pairs and examples as a quality bar, not as answers: never reuse an example's colours or switches for a similar brief, and do not default to amber or stone for anything fantasy.",
+  "Identity beats variety: if the brief has an unmistakable signature colour (a famous brand, team, flag or franchise known for one colour), keep that hue family and vary everything else.",
+  "Long briefs carry intent: honour every detail they give (era, material, audience, colours, adjectives) and let them make the theme more specific and sophisticated.",
   "Warm moods lean toward cream, amber, terracotta; cool moods toward slate, blue, teal; night moods go dark mode.",
 ];
 
@@ -33,7 +36,7 @@ export const AVOID = [
   "Muted text so faint it disappears, or borders so strong they become the design.",
   "Shapes, strong borders, textures or caps on ordinary product briefs (banking, SaaS, minimal, calm): keep round, subtle, none, normal.",
   "Decorative or display fonts for body text (fontBody must be one of the BODY fonts).",
-  "Copying a real brand, game or film: never use its name, logo, slogans, exact colours, or the names of its places, characters or products (also not in the theme name). Capture its feeling instead.",
+  "Copying a real brand, game or film: never use its name, logo, slogans, or the names of its places, characters or products (also not in the theme name). Its signature colour family is fine; capture its feeling, not its assets.",
 ];
 
 /**
@@ -738,13 +741,13 @@ export function guideText(): string {
     "STYLE LEANINGS (helpers, not presets: pick the closest leaning if one fits, follow it loosely, blend two or ignore them; you still choose every concrete value, e.g. which serif or which hue. Report it in leaning, or none):",
     ...LEANINGS.map((l) => `- ${l.id} (${l.feel}): ${l.leans}`),
     "",
-    "PALETTES (start from the closest one, then adapt hue and warmth to the brief):",
+    "PALETTES (reference points for quality; mix, shift or ignore them):",
     ...PALETTES.map(
       (p) =>
         `- ${p.name} (${p.mode}; ${p.feel}): background ${p.background}, foreground ${p.foreground}, primary ${p.primary}, accent ${p.accent}`,
     ),
     "",
-    "EXAMPLES OF GOOD OUTPUT:",
+    "EXAMPLES OF GOOD OUTPUT (format and quality only; do not copy their colours, fonts or switches):",
     ...EXAMPLES.map((e) => `Brief "${e.brief}" →\n${JSON.stringify(e.theme)}`),
   ].join("\n");
 }

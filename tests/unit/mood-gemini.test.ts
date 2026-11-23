@@ -21,7 +21,7 @@ describe("Gemini provider", () => {
     expect((init.headers as Record<string, string>)["x-goog-api-key"]).toBe("test-key");
     const body = JSON.parse(init.body as string);
     expect(body.systemInstruction.parts[0].text).toContain("PALETTES");
-    expect(body.contents[0].parts[0].text).toBe('Brief: "dragon fire"');
+    expect(body.contents[0].parts[0].text).toMatch(/^Brief: "dragon fire"\nCreative direction for this attempt/);
     expect(body.generationConfig.responseJsonSchema.required).toContain("colors");
   });
 

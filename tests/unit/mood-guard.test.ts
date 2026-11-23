@@ -84,7 +84,7 @@ describe("schema", () => {
     ["neon #2077 rain & chrome", "neon #2077 rain & chrome"],
   ])("accepts %j", (input, out) => expect(normaliseMood(input)).toBe(out));
 
-  it.each(["", "one two three four five six", "<script>", "a".repeat(61), "bell\u0007"])("rejects %j", (input) =>
+  it.each(["", "word ".repeat(41), "<script>", "a".repeat(281), "bell\u0007"])("rejects %j", (input) =>
     expect(normaliseMood(input)).toBeNull(),
   );
 

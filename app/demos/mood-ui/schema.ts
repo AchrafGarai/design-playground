@@ -12,9 +12,9 @@ import {
 } from "./design-guide";
 import { hexOf, isToken, type Token, toToken } from "./palette";
 
-/** Mood input rules, shared by the browser and the server: 1–5 words; letters, numbers and symbols (no markup). */
-export const MAX_WORDS = 5;
-export const MAX_CHARS = 60;
+/** Mood input rules, shared by the browser and the server: up to 40 words; letters, numbers and symbols (no markup). */
+export const MAX_WORDS = 40;
+export const MAX_CHARS = 280;
 
 export function normaliseMood(input: string): string | null {
   const mood = input.trim().replace(/\s+/g, " ");

@@ -23,7 +23,19 @@ function themeApi(env: Record<string, string>): Plugin {
           headers: req.headers as Record<string, string>,
           body: req.method === "POST" ? Buffer.concat(chunks) : undefined,
         });
+        // THEME_PROVIDER=claude: Claude via your Claude Code login (local CLI, no API key), tried first.
+        const localClaude =
+          env.THEME_PROVIDER === "claude"
+            ? (
+                (await server.ssrLoadModule("/server/providers/claude-cli.ts")) as {
+                  claudeCliTheme: (user: string, model?: string) => Promise<unknown>;
+                }
+              ).claudeCliTheme
+            : undefined;
+        const cliModel = env.CLAUDE_CLI_MODEL || undefined;
         const response: Response = await handleThemeRequest(request, {
+          localClaude: localClaude && ((user: string) => localClaude(user, cliModel)),
+          CLAUDE_CLI_MODEL: cliModel,
           GEMINI_API_KEY: env.GEMINI_API_KEY || undefined,
           GEMINI_MODEL: env.GEMINI_MODEL || undefined,
           ANTHROPIC_API_KEY: env.ANTHROPIC_API_KEY || undefined,

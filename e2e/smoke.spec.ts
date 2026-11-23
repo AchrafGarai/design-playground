@@ -196,8 +196,7 @@ test("Mood → UI: a pan/zoom canvas of stock shadcn components and a floating p
   const apply = page.getByRole("button", { name: "Apply" });
   await expect(apply).toBeDisabled();
   await input.fill("1920s jazz club, late night rain");
-  await expect(input).toHaveValue("1920s jazz club, late night");
-  await expect(page.getByText("5/5")).toBeVisible();
+  await expect(page.getByText("6/40")).toBeVisible();
   await expect(apply).toBeEnabled();
 
   // Dragging the canvas (middle button works anywhere, like Figma) pans the world; zoom-in scales it.

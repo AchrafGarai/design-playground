@@ -65,3 +65,21 @@ describe("OpenRouter provider", () => {
     expect(r.ok && r.theme.source.id).toBe("offline");
   });
 });
+
+describe("Local Claude CLI provider (dev only)", () => {
+  it("is tried first when the dev middleware injects it", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const localClaude = vi.fn().mockResolvedValue(theme);
+    const r = await generateMoodTheme("calm", { OPEN_ROUTER_API_KEY: "k", localClaude });
+    expect(r.ok && r.theme.source.id).toBe("claude-cli");
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("falls through to OpenRouter when the CLI fails", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(chat(JSON.stringify(theme))));
+    const localClaude = vi.fn().mockRejectedValue(new Error("not logged in"));
+    const r = await generateMoodTheme("calm", { OPEN_ROUTER_API_KEY: "k", localClaude });
+    expect(r.ok && r.theme.source.id).toBe("openrouter");
+  });
+});

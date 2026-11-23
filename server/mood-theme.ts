@@ -2,6 +2,7 @@
 // middleware (vite.config.ts), so dev and production run the same code.
 //
 // Provider chain (first one available wins):
+//   0. Claude CLI        dev only, THEME_PROVIDER=claude: your Claude Code login, no API key (see providers/claude-cli.ts)
 //   1. OpenRouter        if OPEN_ROUTER_API_KEY is set (model: OPENROUTER_MODEL, default a free Ernie model)
 //   2. Gemini            if GEMINI_API_KEY is set (model: GEMINI_MODEL); THEME_PROVIDER=gemini puts it first
 //   3. Claude            if ANTHROPIC_API_KEY is set (optional, paid)
@@ -10,7 +11,7 @@
 //   6. Offline generator always available (no AI)
 // If a provider fails or returns an invalid config, the chain moves on, so the demo always answers.
 import { offlineTheme } from "../app/demos/mood-ui/offline";
-import { clampTheme, normaliseMood, type ShadcnTheme, themeSchema } from "../app/demos/mood-ui/schema";
+import { clampTheme, MAX_WORDS, normaliseMood, type ShadcnTheme, themeSchema } from "../app/demos/mood-ui/schema";
 import { themeUserMessage } from "./prompt";
 import { claudeTheme } from "./providers/claude";
 import { GEMINI_MODEL, geminiTheme } from "./providers/gemini";
@@ -29,6 +30,9 @@ export type ThemeEnv = {
   /** "gemini" tries Gemini before OpenRouter (OpenRouter is first by default). */
   THEME_PROVIDER?: string;
   AI?: WorkersAI;
+  /** Dev only: Claude through the local Claude Code CLI (injected by the dev middleware, never on Cloudflare). */
+  localClaude?: (user: string) => Promise<unknown>;
+  CLAUDE_CLI_MODEL?: string;
   /** Dev only: try a local Ollama server. */
   useOllama?: boolean;
   OLLAMA_URL?: string;
@@ -41,7 +45,7 @@ export type ThemeEnv = {
 const limit = createLimiter();
 
 export type ThemeSource = {
-  id: "gemini" | "openrouter" | "claude" | "workers-ai" | "ollama" | "offline";
+  id: "gemini" | "openrouter" | "claude" | "claude-cli" | "workers-ai" | "ollama" | "offline";
   label: string;
 };
 export type ThemeResponse = ShadcnTheme & { source: ThemeSource };
@@ -50,6 +54,13 @@ type Attempt = { source: ThemeSource; run: () => Promise<unknown> };
 
 function attempts(user: string, env: ThemeEnv): Attempt[] {
   const list: Attempt[] = [];
+  if (env.localClaude) {
+    const run = env.localClaude;
+    list.push({
+      source: { id: "claude-cli", label: `Claude ${env.CLAUDE_CLI_MODEL || "Sonnet"} via Claude Code (local)` },
+      run: () => run(user),
+    });
+  }
   // OpenRouter first by default, Gemini as the alternative (THEME_PROVIDER=gemini swaps them).
   const first: Attempt[] = [];
   if (env.OPEN_ROUTER_API_KEY) {
@@ -107,7 +118,7 @@ export async function generateMoodTheme(
   env: ThemeEnv,
 ): Promise<{ ok: true; theme: ThemeResponse } | { ok: false; status: number; error: string }> {
   const mood = typeof rawMood === "string" ? normaliseMood(rawMood) : null;
-  if (!mood) return { ok: false, status: 400, error: "Use one to five words." };
+  if (!mood) return { ok: false, status: 400, error: `Use up to ${MAX_WORDS} words.` };
 
   for (const attempt of attempts(themeUserMessage(mood), env)) {
     try {

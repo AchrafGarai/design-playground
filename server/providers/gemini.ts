@@ -22,7 +22,7 @@ async function call(user: string, apiKey: string, model: string, withSchema: boo
       systemInstruction: { parts: [{ text: THEME_SYSTEM }] },
       contents: [{ role: "user", parts: [{ text: user }] }],
       generationConfig: {
-        temperature: 0.7,
+        temperature: 1,
         responseMimeType: "application/json",
         // Structured output: the reply must match the shadcn config schema.
         ...(withSchema ? { responseJsonSchema: themeJsonSchema } : {}),

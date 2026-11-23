@@ -14,7 +14,7 @@ export async function ollamaTheme(user: string, baseUrl = OLLAMA_URL, model = OL
       model,
       stream: false,
       format: themeJsonSchema, // Ollama structured outputs: the reply must match this schema
-      options: { temperature: 0.7, num_ctx: 8192 }, // the design guide makes the prompt long
+      options: { temperature: 1, num_ctx: 8192 }, // the design guide makes the prompt long
       messages: [
         { role: "system", content: THEME_SYSTEM },
         { role: "user", content: user },
