@@ -117,7 +117,7 @@ export function PromptBar({
               {open && (
                 <m.div
                   id={detailsId}
-                  className="m-glass w-[min(26rem,calc(100vw-2rem))] rounded-3xl p-4 text-xs text-secondary-text"
+                  className="m-glass max-h-[60vh] w-[min(26rem,calc(100vw-2rem))] overflow-y-auto rounded-3xl p-4 text-xs text-secondary-text"
                   initial={{ opacity: 0, y: 8, scale: 0.97 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 6, scale: 0.98 }}
@@ -143,6 +143,14 @@ export function PromptBar({
                   ) : (
                     <>
                       <p className="text-sm text-contrast">{result.theme.rationale}</p>
+                      {result.theme.reading.reference && (
+                        <div className="mt-3 space-y-1.5">
+                          <p className="text-contrast">How the AI read the brief</p>
+                          <p>{result.theme.reading.reference}</p>
+                          {result.theme.reading.visualLanguage && <p>{result.theme.reading.visualLanguage}</p>}
+                          {result.theme.reading.translation && <p>{result.theme.reading.translation}</p>}
+                        </div>
+                      )}
                       <p className="mt-2">
                         {result.theme.fontHeading} / {result.theme.fontBody} · radius {result.theme.radius}rem ·{" "}
                         {result.theme.mode}

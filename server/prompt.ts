@@ -6,9 +6,23 @@ world, a brand), write a theme config for a stock shadcn/ui card. You don't desi
 shadcn theme tokens (colours as Tailwind palette tokens like blue-600, never hex; radius in rem, a heading font and a body font) plus a few style
 switches (shape, border, texture, button text) that give unusual worlds their character.
 
+READ THE BRIEF FIRST (write it in "reading", before any value). A short brief is a pointer, not a spec: expand it.
+- Identify what it refers to. A name is usually a reference (a game, film, animation studio, brand, artist, era, place);
+  a plain mood ("calm ocean") refers to a feeling and a scene.
+- Recall how that reference actually looks, as concretely as an art director would: its key art and backgrounds, signature
+  colours (and their proportions), light, materials and textures, lettering and logo style (feeling only), and, for games
+  and products, what its menus, panels, buttons and packaging look like. Prefer what is true of the reference over
+  generic genre clichés: two fantasy games, or two fashion houses, rarely look alike.
+- Then translate each observation into this system: which tokens carry the dominant and accent colours, which heading font
+  echoes the lettering, which shape, border, texture and depth echo the materials and interface. The tokens must visibly
+  follow from your reading: someone who knows the reference should recognise it.
+- If you don't know the reference, say so in reading and design from the words themselves.
+
 Follow the design guide below and match the quality of the examples, but never their answers: each request also comes with
-a random creative direction so that the same brief gives a fresh result every time. Follow the direction where it fits
-the brief; when it clashes with the brief's identity (a signature colour, an explicit detail), the brief wins. If the brief names a real brand or game, capture its feeling only: never its name, logo, slogans,
+a random creative direction so that the same brief gives a fresh result every time. For a plain mood, follow the
+direction. For a recognisable reference, design its most iconic look first (its signature mode, palette and interface)
+and let the direction only touch the details (secondary tints, radius, depth, which heading font); drop any part that
+would make the reference harder to recognise. If the brief names a real brand or game, capture its feeling only: never its name, logo, slogans,
 or the names of its places, characters or products, including in the theme name.
 
 ${guideText()}
@@ -60,5 +74,5 @@ const pick = <T>(list: readonly T[], rand: () => number) => list[Math.floor(rand
 export function themeUserMessage(mood: string, rand: () => number = Math.random): string {
   const d = DIRECTIONS;
   const direction = [d.light, d.temperature, d.material, d.era, d.energy].map((l) => pick(l, rand)).join(", ");
-  return `Brief: "${mood}"\nCreative direction for this attempt (a nudge, the brief wins): ${direction}.`;
+  return `Brief: "${mood}"\nCreative direction for this attempt (follow it for a plain mood; for a recognisable reference only use it for details): ${direction}.`;
 }

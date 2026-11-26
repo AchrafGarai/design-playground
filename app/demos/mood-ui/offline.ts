@@ -75,6 +75,7 @@ export function offlineTheme(mood: string): ShadcnTheme {
   const framed = style.border === "double" || style.border === "glow";
   const card: Token = dark ? shift(background, -1) : "white";
   return {
+    reading: { reference: "", visualLanguage: "", translation: "" },
     name: title(mood),
     rationale: `Built offline from the "${p.name}" palette (${p.feel}).`,
     mode: dark ? "dark" : "light",

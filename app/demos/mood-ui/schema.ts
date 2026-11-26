@@ -60,6 +60,14 @@ export type ColorKey = (typeof COLOR_KEYS)[number];
  * everything else falls back to a default if a model slips.
  */
 export const themeSchema = z.object({
+  /** The model's reading of the brief, written before any token (so the tokens follow from it). */
+  reading: z
+    .object({
+      reference: text(300, ""),
+      visualLanguage: text(700, ""),
+      translation: text(500, ""),
+    })
+    .catch({ reference: "", visualLanguage: "", translation: "" }),
   name: text(40, "Untitled"),
   rationale: text(200, ""),
   mode: z.enum(["light", "dark"]).catch("light"),
@@ -83,6 +91,7 @@ export const themeJsonSchema = {
   type: "object",
   additionalProperties: false,
   required: [
+    "reading",
     "name",
     "rationale",
     "mode",
@@ -96,12 +105,35 @@ export const themeJsonSchema = {
     "buttonText",
   ],
   properties: {
+    // First on purpose: the model reasons about the brief before it picks any value.
+    reading: {
+      type: "object",
+      additionalProperties: false,
+      required: ["reference", "visualLanguage", "translation"],
+      properties: {
+        reference: {
+          type: "string",
+          description:
+            "What the brief refers to (a game, film, studio, brand, era, place or plain mood) and its core feeling, in one or two sentences",
+        },
+        visualLanguage: {
+          type: "string",
+          description:
+            "Its actual visual language, recalled concretely: dominant and accent colours, light, materials and textures, lettering, interface or packaging conventions, era. Three to five specific observations, no generic adjectives",
+        },
+        translation: {
+          type: "string",
+          description:
+            "How those observations map onto this theme: which tokens, font, shape, border, texture and depth carry each one",
+        },
+      },
+    },
     name: {
       type: "string",
       description:
         "Theme name: 2 plain English words describing the look (like 'Low Tide', 'Ember Keep'). No proper nouns.",
     },
-    rationale: { type: "string", description: "One sentence: which palette you started from and why it fits" },
+    rationale: { type: "string", description: "One sentence: how the theme captures the brief" },
     mode: { type: "string", enum: ["light", "dark"] },
     colors: {
       type: "object",

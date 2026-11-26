@@ -602,6 +602,12 @@ export const EXAMPLES: { brief: string; theme: ShadcnTheme }[] = [
   {
     brief: "calm ocean",
     theme: {
+      reading: {
+        reference: "A plain mood: open water on a still day, unhurried and trustworthy.",
+        visualLanguage:
+          "Pale sea-glass greens and blues, sun-washed sand, soft diffused light, smooth worn surfaces, generous white space.",
+        translation: "Light mode on teal-50, teal-700 primary, soft radius, quiet humanist type, no texture or frame.",
+      },
       name: "Low Tide",
       rationale: "Sea Glass base: teal-700 accent on teal-50, soft radius, unhurried and clear.",
       mode: "light",
@@ -635,6 +641,13 @@ export const EXAMPLES: { brief: string; theme: ShadcnTheme }[] = [
   {
     brief: "dragon fire",
     theme: {
+      reading: {
+        reference: "High-fantasy menace: a dragon's lair, heat and treasure.",
+        visualLanguage:
+          "Charcoal rock lit from below by molten orange, hoarded gold, carved stone and runes, hammered metal trims, heavy inscriptional capitals.",
+        translation:
+          "Dark stone background, amber primary as molten gold, carved serif caps, gem shape and double gold frame, stone texture.",
+      },
       name: "Ember Keep",
       rationale: "Ember Night base: deep charcoal-brown, molten gold primary, carved serif headings, crisp corners.",
       mode: "dark",
@@ -668,6 +681,12 @@ export const EXAMPLES: { brief: string; theme: ShadcnTheme }[] = [
   {
     brief: "premium minimal",
     theme: {
+      reading: {
+        reference: "A plain mood: a premium, minimal software product.",
+        visualLanguage: "Near-white surfaces, graphite type, one precise dark accent, hairlines, tight geometric sans.",
+        translation:
+          "Light zinc neutrals, zinc-900 primary, squircle corners, subtle lifted buttons, geist throughout.",
+      },
       name: "Quiet Pro",
       rationale:
         "Graphite Pro base: near-white and near-black, one confident black button, system type, generous radius.",
