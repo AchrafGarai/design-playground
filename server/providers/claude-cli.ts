@@ -6,7 +6,8 @@ import { tmpdir } from "node:os";
 import { themeJsonSchema } from "../../app/demos/mood-ui/schema";
 import { THEME_SYSTEM } from "../prompt";
 
-export const CLAUDE_CLI_MODEL = "sonnet";
+// Opus is the strongest at UI taste; slower than OpenRouter but local dev only. Override with CLAUDE_CLI_MODEL.
+export const CLAUDE_CLI_MODEL = "claude-opus-5-5";
 
 type CliResult = { is_error?: boolean; result?: string; structured_output?: unknown; subtype?: string };
 

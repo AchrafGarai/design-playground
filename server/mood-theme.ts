@@ -57,7 +57,7 @@ function attempts(user: string, env: ThemeEnv): Attempt[] {
   if (env.localClaude) {
     const run = env.localClaude;
     list.push({
-      source: { id: "claude-cli", label: `Claude ${env.CLAUDE_CLI_MODEL || "Sonnet"} via Claude Code (local)` },
+      source: { id: "claude-cli", label: `${env.CLAUDE_CLI_MODEL || "claude-opus-5-5"} via Claude Code (local)` },
       run: () => run(user),
     });
   }
